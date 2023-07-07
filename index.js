@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 const http = require("http").Server(app);
 const io = require("socket.io")(http, {
   cors: {
-    origin: "*",
+    origin: ["http://localhost:3000", "https://vehicle-tracking-react-app.vercel.app/", "http://127.0.0.1:3000"],
   },
 });
 const mongoose = require("mongoose");
