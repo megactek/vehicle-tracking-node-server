@@ -1,19 +1,21 @@
+require("dotenv").config();
+
 const router = require("express").Router();
 const axios = require("axios");
 
 const Truck = require("../models/Trucks");
 async function fetchLocationAddress(lat, long) {
-  if (!lat || !long) return;
+  if (!lat || !long) return null;
   try {
     const res = await axios.get(
       `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=${process.env.OPEN_CAGE_ACCESS_TOKEN}`
     );
-    const data = res.json();
+    const data = res.data;
     if (data.status.code === 200) {
       const result = data.results.sort((a, b) => a.confidence - b.confidence);
       const city = result[0].components.county;
       const address = result[0].formatted;
-      return { address: address, city: city };
+      return { location: address, city: city };
     }
   } catch (err) {
     console.log(err.message);
