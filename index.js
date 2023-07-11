@@ -51,22 +51,37 @@ mongoose
   })
   .catch((err) => console.log(err));
 
+let users = [];
+function addTruck(userId, socketId) {
+  !users.some((truck) => truck.userId === userId) && users.push({ userId, socketId });
+}
+function removeTruck(socketId) {
+  users = users.filter((truck) => truck.socketId !== socketId);
+}
+
 io.on("connection", (socket) => {
   console.log("connected to socket");
+
+  socket.on("addUser", (user) => {
+    addTruck(user, socket.id);
+    io.emit("setOnlineUsers", users);
+  });
 
   socket.on("updateCoord", ({ truckId, lat, long }) => {
     console.log("sent coordinates ", lat, long, " to ", truckId);
     io.emit("newCoord", { truckId, lat, long });
-    io.emit("refreshCoord", {});
+    io.emit("setOnlineUsers", users);
   });
 
   socket.on("deleteCoord", () => {
     console.log("refreshed");
-    io.emit("refreshCoord", {});
+    io.emit("setOnlineUsers", users);
   });
 
   socket.on("disconnect", () => {
     console.log("a user disconnected");
+    removeTruck(socket.id);
+    io.emit("setOnlineUsers", users);
   });
 });
 

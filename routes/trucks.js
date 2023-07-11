@@ -22,6 +22,8 @@ async function fetchLocationAddress(lat, long) {
   }
   return null;
 }
+
+
 // Create a pin
 router.post("/", async (req, res) => {
   // check existing truck
