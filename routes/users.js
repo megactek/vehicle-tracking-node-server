@@ -24,7 +24,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     // find user
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ email: String(req.body.email).toLowerCase() });
     !user && res.status(403).json({ message: "wrong email or password" });
 
     // validate password

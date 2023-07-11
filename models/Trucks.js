@@ -13,6 +13,8 @@ const truckSchema = new mongoose.Schema(
       required: true,
       min: 3,
     },
+    location: { type: String },
+    city: { type: String },
     lat: {
       type: Number,
       require: true,
